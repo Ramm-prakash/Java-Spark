@@ -1,3 +1,3 @@
 # Java-Spark
 
-It includes sample JavaSpark code
+It contains sample JavaSpark code
