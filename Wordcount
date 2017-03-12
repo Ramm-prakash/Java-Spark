@@ -1,0 +1,46 @@
+import java.util.Arrays;
+
+import org.apache.commons.collections.bag.SynchronizedSortedBag;
+import org.apache.hadoop.fs.Path;
+import org.apache.spark.*;
+import org.apache.spark.api.java.JavaPairRDD;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
+
+import scala.Tuple2;
+public class Wordcount {
+	
+	public static void main(String args[])
+	{
+		System.setProperty("hadoop.home.dir", "E:/Backup/Winutils/");
+		SparkConf conf = new SparkConf().setAppName("Wordcount").setMaster("local[2]");
+		
+		JavaSparkContext jsc = new JavaSparkContext(conf);
+		System.out.println("----args[0]----"+args[0]+"----"+"args[0]");
+		//JavaRDD<String> lines = jsc.textFile("D:/Eclipse-Neon/Wordcount/test/wordcount.txt");
+		JavaRDD<String> lines = jsc.textFile(args[0]); // giving input file path in the command
+		JavaRDD<String> words = lines.flatMap(line -> Arrays.asList(line.split(" ")));
+		words.collect().forEach(t->System.out.println(t));
+		JavaPairRDD<String, Integer> counts = words.mapToPair(w -> new Tuple2<String,Integer>(w, 1)).
+				 reduceByKey((x,y) -> x+y);
+				;
+		
+		counts.collect().forEach(t -> System.out.println("Key:"+t._1+"Value:"+t._2));
+		
+		counts.saveAsTextFile(args[1]); // to store results in the output path given in the cmd
+		
+		
+		
+		
+		
+		
+	}
+
+}
+
+
+
+// Spark-submit command in the local
+
+
+//spark-submit --class "Wordcount" --master local[2] "D:\Eclipse-Neon\Wordcount\target\Wordcount-0.0.1-SNAPSHOT.jar"  D:/Eclipse-Neon/Wordcount/test/wordcount.txt D:/Eclipse-Neon/Wordcount/test/wordcount_out.txt
