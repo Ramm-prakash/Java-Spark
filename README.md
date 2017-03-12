@@ -1,3 +1,3 @@
-# Java-Spark
+# Spark-Java
 
-It contains sample JavaSpark code
+It contains sample Spark-Java code
