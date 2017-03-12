@@ -1,0 +1,21 @@
+import org.apache.spark.*;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
+public class Linecount {
+	
+	public static void main(String args[])
+	{
+		//System.setProperty("hadoop.home.dir", "E:/Backup/Winutils/");
+		//SparkConf conf=new SparkConf().setAppName("Linecount");
+		SparkConf conf=new SparkConf().setAppName("Linecount").setMaster("local[2]"); // running spark on local
+		
+        JavaSparkContext jsc = new JavaSparkContext(conf);
+        //file from local path, to run it in the local
+        //JavaRDD<String> txtFile =jsc.textFile("D:/Eclipse-Neon/Line_Count_Spark/test/linecount.txt");
+        //file from HDFS PATH, to run it in a cluster
+        JavaRDD<String> txtFile =jsc.textFile("/user/cloudera/sqoop_import/departments/part-m-00000");
+        System.out.println("The total Line count is"+txtFile.count());
+	
+	}
+
+}
